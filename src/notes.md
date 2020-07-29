@@ -2,8 +2,9 @@
 
 These are my notes as I seek to understand how this tool works. Mostly I'm just looking to understand how this works with respect to the pendulum. At the end of this, I hope this is a useful guide for anyone who wishes to use this tool for real-time reachability. 
 
+# Brief description of the pendulum problem 
 
-
+The control objective is to move the cart from one position to another along the track with the pendulum still standing at the upright position #920; =0. The DC motor has only limited power and the track length has finite length, thus there exists certain sates of the physical system from which the pendulum cannot be steered back to the upright position. 
 ## Definitions/Reference
 
 - **REAL**: double
@@ -101,12 +102,13 @@ It defines a struct called LiftingSettings with the following fields:
 - maxRectWidthBeforeError
 - maxRuntimeMilliseconds 
 
-The struct also defines pointers to functions: 
+The struct also defines pointers to functions:
+
 - bool (*reachedAtIntermediateTime)(HyperRectangle* r);
       - **explanation**:
-	- bool (*reachedAtFinalTime)(HyperRectangle* r);
+- bool (*reachedAtFinalTime)(HyperRectangle* r);
       - **explanation**:
-	- void (*restartedComputation)();
+- void (*restartedComputation)();
       - **explanation**:
 
 Pointers to functions:
