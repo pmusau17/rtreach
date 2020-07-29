@@ -10,7 +10,7 @@
 #include "main.h"
 #include <stdbool.h>
 
-// simulate dynamics using Eurler's method
+// simulate dynamics using Euler's method
 void simulate(REAL point[NUM_DIMS],
 			  REAL stepSize,
 			  bool (*shouldStop)(REAL state[NUM_DIMS], REAL simTime, void* p),
