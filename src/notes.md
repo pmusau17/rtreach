@@ -3,7 +3,7 @@ These are my notes as I seek to understand how this tool even works. At the end 
 # On x86 systems this is what gets executed when you run make 
 
 ```
-gcc -std=gnu99 -O3 - Wall facelift.c geometry.c interval.c simulate.c util.c \ 
+$ gcc -std=gnu99 -O3 - Wall facelift.c geometry.c interval.c simulate.c util.c \ 
    dynamics_converging_oscillator.c dynamics_harmonic_oscillator.c dynamics_vanderpol.c \
    dyanmics_pendulum.c dynamics_pendulum_nonlinear.c pendulum.c -lm -o rtreach -DNONLINEAR_PENDULUM
 ```
