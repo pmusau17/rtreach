@@ -2,6 +2,11 @@
 CC = gcc
 CC_arm = arm-linux-gnueabi-gcc
 CC_arm_noos = arm-none-eabi-gcc
+
+# -std specifies the language standard in this case its gnu99
+# -lm links the math libraries
+# -03 directs the compiler to optimize for code size and execution time
+# - Wall enables all of the compiler's warning messages
 FLAGS = -std=gnu99 -O3 -Wall 
 LIBS = -lm
 FLAGS_ARM = -static
@@ -22,7 +27,7 @@ arm_noos:
 	$(CC_arm_noos) $(FLAGS) $(FLAGS_ARM) main.c $(RTREACH_CORE) $(RTREACH_EXAMPLES) pendulum.c $(LIBS) -o rtreach_arm_noos -DLINEAR_PENDULUM
 
 x86:
-	$(CC) $(FLAGS) main.c $(RTREACH_CORE) $(RTREACH_EXAMPLES) pendulum.c $(LIBS) -o rtreach -DLINEAR_PENDULUM
+	$(CC) $(FLAGS) main.c $(RTREACH_CORE) $(RTREACH_EXAMPLES) pendulum.c $(LIBS) -o rtreach -DNONLINEAR_PENDULUM
 
 x86_nonlinear:
 	$(CC) $(FLAGS) main.c $(RTREACH_CORE) $(RTREACH_EXAMPLES) pendulum.c $(LIBS) -o rtreach -DNONLINEAR_PENDULUM
