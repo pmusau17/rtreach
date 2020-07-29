@@ -33,11 +33,11 @@ This file picks the dynamics header to comiple.
 
 Let's consider the non-linear case. 
 
-The [dynamics_pendulum_nonlinear.h](dynamics_pendulum_nonlinear.h) file specifies the number of dimensions. In the case of the inverted pendulum which is an example considered in this repository there are 4 states, therefore 4 dimensions. The real time reachability algorithm uses boxes to represent the states. The technique makes use of mixed face-lifiting and in mixed face lifting they dynamics along each face are over-approximated by the maximum derivative along that face. 
+The [dynamics_pendulum_nonlinear.h](dynamics_pendulum_nonlinear.h) file specifies the number of dimensions. In the case of the inverted pendulum which is an example considered in this repository there are 4 states, therefore 4 dimensions. The real time reachability algorithm uses boxes to represent the states. The technique makes use of mixed face-lifiting and in mixed face lifting the dynamics along each face are over-approximated by the maximum derivative along that face. For a box, there are two faces for every dimension (one for the minimum
+face along that dimension and one for the maximum face).
 
-Thus is the geometry file you will find a definition that specifies that the number of faces is two times the number of dimensions. Thus the file defines 
 
-NUM_FACES = (2* NUM_DIMS)
+Thus, NUM_FACES = (2* NUM_DIMS)
 
 Definitions in this file:
 
@@ -68,6 +68,27 @@ The DYNAMICS_PENDULUM_NONLINEAR does...(add this).
 
 This header file defines one function: 
 - double get_derivative_bounds(HyperRectangle* rect, int faceIndex)
+
+### face_lift.h
+
+This file is the header file for the main mixed face-lifting algorithm. 
+
+It defines a struct called LiftingSettings with the following fields:
+- init which is a hyper-rectangle
+- reachtime which is a double denoting the total reach time
+- initialstep size which is the size of the steps to use
+- maxRectWidthBeforeError
+- maxRuntimeMilliseconds 
+
+The struct also defines pointers to functions: 
+	- bool (*reachedAtIntermediateTime)(HyperRectangle* r);
+      - **explanation**:
+	- bool (*reachedAtFinalTime)(HyperRectangle* r);
+      - **explanation**:
+	- void (*restartedComputation)();
+      - **explanation**:
+(notes for me)
+- The idea behind pointers to functions is that it's possible to write a function that takes the address of another function as an argument. This enables the first function to find the second function and run it. Thus enabling the possibility of passing different function addresses to the first function at different times for different purposes.
 
 
 
