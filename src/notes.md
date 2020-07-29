@@ -1,14 +1,14 @@
-# On rtreach
+# On Rtreach
 
 These are my notes as I seek to understand how this tool works. At the end of this, I hope this is a useful guide for anyone who wishes to use this tool for real-time reachability. 
 
 
 
-# Definitions/Reference
+## Definitions/Reference
 
 - **REAL**: double
 
-# On x86 systems this is what gets executed when you run make 
+### On x86 systems this is what gets executed when you run make 
 
 ```
 gcc -std=gnu99 -O3 - Wall facelift.c geometry.c interval.c simulate.c util.c \ 
@@ -16,7 +16,7 @@ gcc -std=gnu99 -O3 - Wall facelift.c geometry.c interval.c simulate.c util.c \
    dyanmics_pendulum.c dynamics_pendulum_nonlinear.c pendulum.c -lm -o rtreach -DNONLINEAR_PENDULUM
 ```
 
-# The core of RTREACH are the following files
+## The core of RTREACH is contained in the following files
 
 - [facelift.c](facelift.c)
 - [geometry.c](geometry.c)
