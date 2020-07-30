@@ -123,7 +123,8 @@ The function also defines one method that uses the struct defined above:
 
 This file has declarations for three methods:
 - double potential(double pos, double vel, double theta, double omega);
-   - The inputs to this function are the states of the pendulum and it returns the input from the LMI-outputted function?
+   - The inputs to this function are the states of the pendulum and it returns the value of the Lyapunov potential function. This potential function approximates a region known as the recoverable region. The recoverable region is a region of the state space in which a given controller can stabilize the system. from the gain controller computed offline by solving the LMI problem. The solution of this problem yields a gain vector K and a matrix P such that <img src="https://render.githubusercontent.com/render/math?math=X^TPX =1">. As per the following [report](https://apps.dtic.mil/dtic/tr/fulltext/u2/a373286.pdf), this gain value can be use to stabilize the system asymptotically and <img src="https://render.githubusercontent.com/render/math?math=X^TPX =1"> can be used to approximate the ellipsoid of the recoverable region. Thus this function computes the value of this potential function with P defined below: ![P](p.png)
+
 - int isSafe(int runtimeMs, double state[NUM_DIMS])
    - NUM_DIMS is 4, 
 - bool runReachability(double * start, double simTime, double wallTimeMs, double startMs); 
