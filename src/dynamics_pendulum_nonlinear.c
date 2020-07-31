@@ -24,6 +24,8 @@ double get_derivative_bounds(HyperRectangle* rect, int faceIndex)
 {
 	int dim = faceIndex / 2;
 	bool isMin = (faceIndex % 2) == 0;
+
+    // Interval rv.min = rv.max =0
     Interval rv = new_interval_v(0);
 
 //    Interval x = rect->dims[0];
@@ -39,9 +41,6 @@ double get_derivative_bounds(HyperRectangle* rect, int faceIndex)
     }
     else if (dim == 1)
     {
-        //v' == -(omega^2*sin(theta) - (5401*v)/1900 + cos(theta)*((3*omega)/2500 + (147*sin(theta))/5))
-        //                       / (3*cos(theta)^2 - 29)
-
         //v' == (omega^2 * sin(theta) + (-5401/1900)*v + cos(theta)*(3/2500*omega + 147/5*sin(theta)))
         //                      /   (-3*cos(theta)^2 + 29)
 

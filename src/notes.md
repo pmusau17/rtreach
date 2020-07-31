@@ -133,7 +133,6 @@ This file has declarations for three methods:
 - bool runReachability(double * start, double simTime, double wallTimeMs, double startMs); 
    - **explanation**
 
-
 ### util.h
 
 Defines two global variables:
@@ -153,19 +152,50 @@ Methods:
 
 This file define one method called simulate 
 - void simulate(REAL point[NUM_DIMS], double stepSize, bool (*shouldStop)(REAL state[NUM_DIMS], double simTime, void* p), void* param);
-   - **Explanation**: The header of this function says that it peforms simulation using Euler's method for numerical simulation. For those of us, who don't remember what this means look at the following [article](https://tutorial.math.lamar.edu/classes/de/eulersmethod.aspx). Euler's method is a numerical analysis technique that allows one to approximate solutions to differential equations. It takes the point from which to conduct the simulation and the derivative evaluated at this point to write down the equation of the tangent line. It then uses this to approximate the solution at a given step from the initial point. This process can be repeated to perform a simulation. Pseudocode below: <img src="images/euler.png" alt="euler" width="400"/>
+   - **Explanation**: The header of this function says that it peforms simulation using Euler's method for numerical simulation. For those of us, who don't remember what this means look at the following [article](https://tutorial.math.lamar.edu/classes/de/eulersmethod.aspx). Euler's method is a numerical analysis technique that allows one to approximate solutions to differential equations. It takes the point from which to conduct the simulation and the derivative evaluated at this point to write down the equation of the tangent line. It then uses this to approximate the solution at a given step from the initial point. This process can be repeated to perform a simulation. Pseudocode below: <img src="images/euler.png" alt="euler" width="400"/>. 
+   - The derivative computations are defined in terms of intervals in files [dynamics_pendulum.c](dynamics_pendulum.c) and [dynamics_pendulum_nonlinear.c](dynamics_pendulum_nonlinear.c). 
+   - It performs simulation for a given simulation time, and stops if this time is over or the state is within the ellipsoid.
 
 - shouldStop(double state[NUM_DIMS], double simTime, void*p)
-   - **Explanation**: This function is utilized in simulate. computes the lyapunov function for a given state. So far I think p the last pointer is the stop time and then it gets set to simTime (huh?). If rv <1. In simulate.c its says *p is param. 
+   - **Explanation**: This function is utilized in simulate. computes the lyapunov function for a given state. This function is used within the simulate function and it is called repetitively during the euler simulation. If rv <1 then it's within the ellipsoid and simulation should stop. The other termination condition is the length of simulation. p looks the pointer that records the time in which the simulation stop time. 
 
 - simulate(double startPoint[NUM_DIMS],double stepSize, bool (*shouldStop)(REAL state[NUM_DIMS], REAL simTime, void* p), void* param)
    - **Explanation**: the simulation uses a hyper-rectangle but with the min and max at the same point so its not really an interval but rather a point. 
 
 
+### Interval.h
+
+This file contains the functions needed to do interval arithmetic. Here are the operations that are provided in the file. 
+I
+- Interval new_interval(double min, double max);
+   - creates a new interval [min,max]
+- Interval new_interval_v(double val);
+   - creates a new interval [val,val]
+- Interval add_interval(Interval i, Interval j);
+   - Adds two intervals [i.min+j.min,i.max+j.max]
+- Interval sub_interval(Interval i, Interval j);
+   - Subtracts two intervals from each other [i.min-j.min,i.max-j.max]
+- Interval mul_interval(Interval i, Interval j);
+   - Multiply two intervals together 
+- Interval div_interval(Interval i, Interval j);
+   - Division of two intervals
+- Interval pow_interval(Interval i, int n); 
+- Interval sin_interval(Interval i);
+- Interval cos_interval(Interval i);
+
 # Dynamics Files 
 
 ### dynamics_pendulum_nonlinear.c
 ![P](./images/non_linear_dynamics.png)
+
+This file defines a function called get_derivative_bounds which computes the derivative in terms of interval arithmetic. 
+
+- get_derivative_bounds(HyperRectange* rect, int faceIndex)
+   -  It does so for each dimesnsion at a time. So whatever dimensions is specified by the faceIndex parameter. 
+   -  If the index is odd it returns the minimum part of the interval
+   -  If the index is even it returns the maximum part
+   -  When simulate uses this function it doesn't matter what the faceIndex is because rv.min, rv.max are the same
+
 
 
 

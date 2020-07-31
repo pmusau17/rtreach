@@ -87,7 +87,7 @@ long int milliseconds()
 #else
 	long int difSec = now.tv_sec - startSec;
 	long int ms = now.tv_usec / 1000;
-        long int ds = difSec * 1000 + ms;
+    long int ds = difSec * 1000 + ms;
 #endif
 
 

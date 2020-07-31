@@ -159,12 +159,14 @@ bool shouldStop(REAL state[NUM_DIMS], REAL simTime, void* p)
 
 	DEBUG_PRINT("\n\r\n\rpot: %f\n\rmaxTime: %f\n\r", pot, maxTime);
 
+	// if the state is within the ellipsoid then the simulation can stop
 	if (pot < 1)
 	{
 		rv = true;
 //		rv = (bool)1;
 //		rv = false;
 
+		// record the stop time
 		REAL* stopTime = (REAL*)p;
 		DEBUG_PRINT("p from pointer: %p\n\r", (REAL *)p);
 		*stopTime = simTime; // should set *p = simTime?
@@ -173,10 +175,11 @@ bool shouldStop(REAL state[NUM_DIMS], REAL simTime, void* p)
 
 		DEBUG_PRINT("\n\r\n\rp: %p\n\rstopTime: %f\n\rrv: %d\n\r", (REAL*)p, *stopTime, rv);
 		if (rv) {
-			DEBUG_PRINT("RV TRUE\n\r");
+			DEBUG_PRINT("RV TRUE\n\r"); // Recoverable states are true
 		}
 	}
 
+	// stop if the maximum simulation time 
 	if (simTime >= maxTime)
 	{
 		rv = true;
@@ -234,6 +237,7 @@ int isSafe(int runtimeMs, REAL state[NUM_DIMS])
 	int rv = 0; // default return val of 0
 	int startMs = milliseconds();
 
+	// compute the value of the lyapunov potential function
     REAL pot = potential(state[0], state[1], state[2], state[3]);
 
 //	if (pot > 1) {
