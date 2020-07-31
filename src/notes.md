@@ -9,6 +9,7 @@ The control objective is to move the cart from one position to another along the
 
 - **REAL**: double
 - **AVR-GCC**: AVR-GCC is a compiler that takes C language high level code and creates binary source code that can be uploaded into an AVR micro contoller. 
+- In C if you want indicate that the compiler should treat a decimal as a single precision floating pointer number you use f.
 
 ### On x86 systems this is what gets executed when you run make 
 
@@ -84,7 +85,9 @@ Methods declared in this header file and their explanations (**add them as you f
 
 This file simply defines DYNAMICS_PENDULUM_NONLINEAR and NUM_DIMS.
 
-The DYNAMICS_PENDULUM_NONLINEAR does...(add this).
+The DYNAMICS_PENDULUM_NONLINEAR specifies which dynamics file to use. So 
+- DYNAMICS_PENDULUM_NONLINEAR corresponds to [dynamics_pendulum_nonlinear.c](dynamics_pendulum_nonlinear.c)
+- DYNAMICS_PENDULUM corresponds to [dynamics_pendulum.c](dynamics_pendulum.c)
 
 ### dynamics.h
 
@@ -123,7 +126,7 @@ The function also defines one method that uses the struct defined above:
 
 This file has declarations for three methods:
 - double potential(double pos, double vel, double theta, double omega);
-   - **Explanation**: The inputs to this function are the states of the pendulum and it returns the value of the Lyapunov potential function. This potential function approximates a region known as the recoverable region. The recoverable region is a region of the state space in which a given controller can stabilize the system. from the gain controller computed offline by solving the LMI problem. The solution of this problem yields a gain vector K and a matrix P such that <img src="https://render.githubusercontent.com/render/math?math=X^TPX =1">. As per the following [report](https://apps.dtic.mil/dtic/tr/fulltext/u2/a373286.pdf), this gain value can be use to stabilize the system asymptotically and <img src="https://render.githubusercontent.com/render/math?math=X^TPX =1"> can be used to approximate the ellipsoid of the recoverable region. Thus this function computes the value of this potential function with P defined below: <img src="images/p.png" alt="potential" width="400"/>
+   - **Explanation**: The inputs to this function are the states of the pendulum and it returns the value of the Lyapunov potential function. This potential function approximates a region known as the recoverable region. The recoverable region is a region of the state space in which a given controller can stabilize the system. from the gain controller computed offline by solving the LMI problem. The solution of this problem yields a gain vector K and a matrix P such that <img src="https://render.githubusercontent.com/render/math?math=X^TPX =1">. As per the following [report](https://apps.dtic.mil/dtic/tr/fulltext/u2/a373286.pdf), this gain value can be use to stabilize the system asymptotically and <img src="https://render.githubusercontent.com/render/math?math=X^TPX =1"> can be used to approximate the ellipsoid of the recoverable region. Thus this function computes the value of this potential function with P defined below: ![P](./images/p.png)
 
 - int isSafe(int runtimeMs, double state[NUM_DIMS])
    - **Explanation**: The first thing this function does is compute the lyapunov potential as defined above. If the potential is less than equal to 1, Then we return 1.
@@ -152,6 +155,17 @@ This file define one method called simulate
 - void simulate(REAL point[NUM_DIMS], double stepSize, bool (*shouldStop)(REAL state[NUM_DIMS], double simTime, void* p), void* param);
    - **Explanation**: The header of this function says that it peforms simulation using Euler's method for numerical simulation. For those of us, who don't remember what this means look at the following [article](https://tutorial.math.lamar.edu/classes/de/eulersmethod.aspx). Euler's method is a numerical analysis technique that allows one to approximate solutions to differential equations. It takes the point from which to conduct the simulation and the derivative evaluated at this point to write down the equation of the tangent line. It then uses this to approximate the solution at a given step from the initial point. This process can be repeated to perform a simulation. Pseudocode below: <img src="images/euler.png" alt="euler" width="400"/>
 
+- shouldStop(double state[NUM_DIMS], double simTime, void*p)
+   - **Explanation**: This function is utilized in simulate. computes the lyapunov function for a given state. So far I think p the last pointer is the stop time and then it gets set to simTime (huh?). If rv <1. In simulate.c its says *p is param. 
+
+- simulate(double startPoint[NUM_DIMS],double stepSize, bool (*shouldStop)(REAL state[NUM_DIMS], REAL simTime, void* p), void* param)
+   - **Explanation**: the simulation uses a hyper-rectangle but with the min and max at the same point so its not really an interval but rather a point. 
+
+
+# Dynamics Files 
+
+### dynamics_pendulum_nonlinear.c
+![P](./images/non_linear_dynamics.png)
 
 
 
