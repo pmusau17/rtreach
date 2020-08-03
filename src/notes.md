@@ -10,6 +10,8 @@ The control objective is to move the cart from one position to another along the
 - **REAL**: double
 - **AVR-GCC**: AVR-GCC is a compiler that takes C language high level code and creates binary source code that can be uploaded into an AVR micro contoller. 
 - In C if you want indicate that the compiler should treat a decimal as a single precision floating pointer number you use f.
+- **reach-time**:  the time we are computing reachability for.
+- **runtime** the wall time the method is allowed to run.
 
 ### On x86 systems this is what gets executed when you run make 
 
@@ -119,7 +121,7 @@ Pointers to functions:
 
 The function also defines one method that uses the struct defined above:
 - bool face_lifting_iterative_improvement(int startMs, LiftingSettings* settings);
-   - This function does face lifting with the settings given above. It does not do iterative improvment. It tries to do everything in a single step (which is best for short reach times). It will return true if the set of states is satisfcatory according to the function you provide in LiftingSettings (**HUH?**)
+   - This function does face lifting with the settings given above. It does not do iterative improvment. It tries to do everything in a single step (which is best for short reach times). It will return true if the set of states is satisfcatory according to the function you provide in LiftingSettings. That function is reachedAtIntermediateTime and this function checks whether the current hyper-rectangle satisifes the constraints.
 
 
 ### pendulum.h
@@ -127,11 +129,17 @@ The function also defines one method that uses the struct defined above:
 This file has declarations for three methods:
 - double potential(double pos, double vel, double theta, double omega);
    - **Explanation**: The inputs to this function are the states of the pendulum and it returns the value of the Lyapunov potential function. This potential function approximates a region known as the recoverable region. The recoverable region is a region of the state space in which a given controller can stabilize the system. from the gain controller computed offline by solving the LMI problem. The solution of this problem yields a gain vector K and a matrix P such that <img src="https://render.githubusercontent.com/render/math?math=X^TPX =1">. As per the following [report](https://apps.dtic.mil/dtic/tr/fulltext/u2/a373286.pdf), this gain value can be use to stabilize the system asymptotically and <img src="https://render.githubusercontent.com/render/math?math=X^TPX =1"> can be used to approximate the ellipsoid of the recoverable region. Thus this function computes the value of this potential function with P defined below: ![P](./images/p.png)
-
+- intermediateState(HyperRectangle *)
+   - **explanation**: This function determines if the  HyperRectangle passed to this function satisifes the physical constraints defined in the original problem. If it does it returns true else it returns false.
 - int isSafe(int runtimeMs, double state[NUM_DIMS])
-   - **Explanation**: The first thing this function does is compute the lyapunov potential as defined above. If the potential is less than equal to 1, Then we return 1.
+   - **Explanation**: Computes the if the current state is safe. The first thing this function does is compute the lyapunov potential as defined above. If the potential is less than equal to 1, then we return 1. If the value of the lmi is greater than one then we simulate it for a maximum of two seconds to see if it goes back into the ellipsod and how far in the future it returns back into the ellipsoid. If the time to safe returned by the simulation is greater than zero it then runs reachability and if that status is safe it returns 3 if not it reutns 2. If the timetosafe is zero, it also returns reachability and if that state is safe it returns 2.
 - bool runReachability(double * start, double simTime, double wallTimeMs, double startMs); 
-   - **explanation**
+   - **explanation**: This function calls the face_lifting_iterative_improvement(given the startTime, and the settings for the algorithm. It starts with the point specified by start. simTime is synonymous with reachtime. The maximum runtime given for the algorithm is given by wallTimeMs. The initial stepsize is simTime/10 and the maximum widthBefore error is 100. It then defines the functions needed by [face_lift.h](face_lift.h). IntermediateState makes sure that the states satisfy the constraints. FinalState to be completely frank I'm not sure. From an initial pass though it looks like it just enumerates all the possible combinations for HyperRectangles of NUM_DIMS of which there are 2^(NUM_DIMS), so for the pendulum there are 16. Based on these combinations it computes the maximum potential of any of these states and then returns whether or not the max potential of all the states is within the ellipsoid or safe. Take a look here [pendulum.c](pendulum.c)
+
+- getSimulatedSafeTime(REAL start[4])
+   - stepSize = 0.02
+   - initial stopTime is 0.0 
+   - returns the time when the state is safe or the max simulation time.
 
 ### util.h
 
@@ -145,7 +153,7 @@ Methods:
 - void set_error_print_params(LiftingSettings* set);
    - **explanation**
 - long int milliseconds();
-   - **explanation**
+   - **explanation**: computes time passed in milliseconds
 
 
 ### simulate.h
