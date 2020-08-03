@@ -139,7 +139,7 @@ This file has declarations for three methods:
 - getSimulatedSafeTime(REAL start[4])
    - stepSize = 0.02
    - initial stopTime is 0.0 
-   - returns the time when the state is safe or the max simulation time.
+   - returns the time when the state is safe or the max simulation time. If there is no safe state within the simulation it returns -1
 
 ### util.h
 
@@ -203,6 +203,23 @@ This file defines a function called get_derivative_bounds which computes the der
    -  If the index is odd it returns the minimum part of the interval
    -  If the index is even it returns the maximum part
    -  When simulate uses this function it doesn't matter what the faceIndex is because rv.min, rv.max are the same
+
+
+# Example Execution with the Pendulum Example Code 
+
+
+One of the examples included in the code starts with the state [-0.1 0.9 0.0 0.0]. The command to run the code with this start state is 
+```
+./rtreach 100 -0.1 0.9 0.0 0.0
+```
+
+This state is unsafe and this can be seen from the value of the lyapunov potential function which is 1.755. From there within the main.c we call the function issafe with the a reachtime of 100ms. Since the lyapunov potential is greater than 1 we use simulation to check whether a future state will re-enter the safe region. This simulation is done via euler simulation and each intermediate state's lyapunov potential is computed via the function shouldStop which is defined in [pendulum.c](pendulum.c). The euler simulation uses a step size of 0.02. Since no succeeding state enters the safe region after 2.00 the algorithm concludes that the system is unsafe. No reachability algorithm is used here, only simulation and successive calls to lyapunov potential function derived by the lmi.
+
+### Example 2, recoverable state (if you use the linear dynamics)
+```
+./rtreach 100 -0.1 0.6 0.0 0.0
+```
+
 
 
 
