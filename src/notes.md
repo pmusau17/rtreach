@@ -7,11 +7,14 @@ These are my notes as I seek to understand how this tool works. Mostly I'm just 
 The control objective is to move the cart from one position to another along the track with the pendulum still standing at the upright position #920; =0. The DC motor has only limited power and the track length has finite length, thus there exists certain sates of the physical system from which the pendulum cannot be steered back to the upright position. 
 ## Definitions/Reference
 
+This [thesis](http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=37FB8AC6EF9877F0600CCEC69475A688?doi=10.1.1.2.4227&rep=rep1&type=pdf) will prove to be very helpful.
+
 - **REAL**: double
 - **AVR-GCC**: AVR-GCC is a compiler that takes C language high level code and creates binary source code that can be uploaded into an AVR micro contoller. 
 - In C if you want indicate that the compiler should treat a decimal as a single precision floating pointer number you use f.
 - **reach-time**:  the time we are computing reachability for.
-- **runtime** the wall time the method is allowed to run.
+- **runtime**: the wall time the method is allowed to run.
+- **Neighborhood**: We define the neighborhood of a polyhedron F, as the polyhedron obtained by pushing outward each face e of F by an amount ve. The details are provided in the above thesis on page 89. 
 
 ### On x86 systems this is what gets executed when you run make 
 
@@ -205,6 +208,8 @@ This file defines a function called get_derivative_bounds which computes the der
    -  When simulate uses this function it doesn't matter what the faceIndex is because rv.min, rv.max are the same
 
 
+
+
 # Example Execution with the Pendulum Example Code 
 
 
@@ -219,6 +224,18 @@ This state is unsafe and this can be seen from the value of the lyapunov potenti
 ```
 ./rtreach 100 -0.1 0.6 0.0 0.0
 ```
+
+The initial state is not within the ellipse since the value of the lyapunov potential function is 1.047692. Since this is the case the next thing that the issafe function is use simulation to see if a future state will return to the ellipse. The simulation uses the feedback controller K which was designed by following the LMI based Simplex Approach. The simulation can execute for a maximum of 2.0s but will stop as soon as a future state is within the ellipsoid. In this case it occurs within 5 euler steps (0.02). This causes the simulation to stop and then we go back to the isSafe function in [pendulum.c](pendulum.c). We can conclude that the current state is safe if we use the safety controller in the future and now we run the runReachability function with the inputs (0.1*1.25) the runtime we specified intially which is 100ms and startms (I have no idea what this is...stay tuned).
+
+runReachability is a functiond defined within [pendulum.c](pendulum.c). That uses the mixed face lifting methods described in the paper to do reachability (fam save me now...). It begins by setting the intial point in the facelifting settings. The first of which is constructing an interval whose min and max are the state from which we are doing reachability. The walltime is what we entered so in our case its 100ms. simTime is (0.1*1.25). It then divides this simtime by 10 and set this is athe initialStepSize with a maxRectWidth of 100. 
+
+
+
+
+### Notes:
+
+- What is the input when the non-linear pendulum model is used? I don't see an input for the linear model its the feedback controller KX with K derived from solving the LMI problem.
+
 
 
 
