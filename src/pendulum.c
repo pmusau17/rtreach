@@ -111,6 +111,9 @@ REAL potential(REAL pos, REAL vel, REAL theta, REAL omega)
 	return rv;
 }
 
+
+// This function enumerates all of the corners of the current HyperRectangle and 
+// returns whether or not any of the points lies outside of the ellipsoid
 bool finalState(HyperRectangle* rect)
 {
 	REAL points[16][4] =

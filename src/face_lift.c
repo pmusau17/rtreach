@@ -221,6 +221,7 @@ bool face_lifting_iterative_improvement(int startMs, LiftingSettings* settings)
 
 	set_error_print_params(settings);
 
+	// Get the settings from the facelifting settings
 	REAL stepSize = settings->initialStepSize;
 
 	int iter = 0; // number of iterations
@@ -242,13 +243,21 @@ bool face_lifting_iterative_improvement(int startMs, LiftingSettings* settings)
 			settings->restartedComputation();
                 }
 
+		// This function gets the reachtime passed from the settings 
+		// In the case of the pendulum example it is 0.1*1.25*TimeToSafe
 		REAL timeRemaining = settings->reachTime;
+
+		// Get the initial set from which to perform reachability analysis.
 		HyperRectangle trackedRect = settings->init;
+
+		// Create a new hyperrectangle
 		HyperRectangle hull;
 
 		// compute reachability up to split time
 		while (safe && timeRemaining > 0)
 		{
+			// reachedAtIntermediateTime is a functiont that makes sure that the current state satisfies 
+			// the constraints. 
 			if (settings->reachedAtIntermediateTime) {
 				hull = trackedRect;
                         }
