@@ -15,6 +15,21 @@ void make_neighborhood_rect(HyperRectangle* out, int f,
 		HyperRectangle* bloatedRect, HyperRectangle* originalRect, REAL nebWidth)
 {
 	*out = *bloatedRect;
+
+	/*printf("out: ");
+	print(out);
+	printf("\n\n");
+
+	printf("bloatedRect: ");
+	print(bloatedRect);
+	printf("\n");
+
+	printf("originalRect: ");
+	print(originalRect);
+	printf("\n");*/
+
+
+
 	bool isMin = (f % 2) == 0;
 	int d = f / 2;
 
@@ -67,6 +82,12 @@ REAL lift_single_rect(HyperRectangle* rect, REAL stepSize, REAL timeRemaining)
 	bool needRecompute = true;
 	REAL minNebCrossTime;
 	REAL ders[NUM_FACES];
+	
+	// Printing Patrick
+	printf("rect: ");
+	print(rect);
+	printf("\n\n");
+
 
 	while (needRecompute)
 	{
@@ -82,10 +103,18 @@ REAL lift_single_rect(HyperRectangle* rect, REAL stepSize, REAL timeRemaining)
 
 			// make candidate neighborhood
 			make_neighborhood_rect(&faceNebRect, f, &bloatedRect, rect, nebWidth[f]);
+			
+			printf("faceNebRect: %d :",f);
+			print(&faceNebRect);
+			printf("\n");
 
 			// test derivative inside neighborhood
+
+			// the projection of the derivative on the outward norm e_i- is -fi(x) and fi(x) for e_i
 			REAL der = get_derivative_bounds(&faceNebRect, f);
 
+
+			// so we cap the derivative at 999999 and min at the negative of that.
 			if (der > MAX_DER) {
 				der = MAX_DER;
                         }
@@ -94,9 +123,15 @@ REAL lift_single_rect(HyperRectangle* rect, REAL stepSize, REAL timeRemaining)
                         }
 
 			REAL prevNebWidth = nebWidth[f];
-			REAL newNebWidth = der * stepSize;
+			REAL newNebWidth = der * stepSize; // the projection of the derivative is tempered by the stepSize
+			
+			// if it is a negative facing face the derivative is negative if it is less than 0.
+			// if it is a positive facing face the derivative has to be positive to grow and outward.
+			
+			bool grewOutward = (isMin && newNebWidth < 0) || (!isMin && newNebWidth > 0); 
 
-			bool grewOutward = (isMin && newNebWidth < 0) || (!isMin && newNebWidth > 0);
+			// check if the previous nebWidth grewOutward.
+
 			bool prevGrewOutward = (isMin && prevNebWidth < 0) || (!isMin && prevNebWidth > 0);
 
 			// prevent flipping from outward face to inward face
@@ -244,11 +279,17 @@ bool face_lifting_iterative_improvement(int startMs, LiftingSettings* settings)
                 }
 
 		// This function gets the reachtime passed from the settings 
-		// In the case of the pendulum example it is 0.1*1.25*TimeToSafe
+		// In the case of the pendulum example it is 1.25*TimeToSafe
 		REAL timeRemaining = settings->reachTime;
 
 		// Get the initial set from which to perform reachability analysis.
 		HyperRectangle trackedRect = settings->init;
+
+		// Debugging for Patrick
+		printf("iter: %d, stepSize: %f with ",iter,stepSize);
+		print(&trackedRect);
+		printf("\n");
+		
 
 		// Create a new hyperrectangle
 		HyperRectangle hull;
@@ -256,7 +297,7 @@ bool face_lifting_iterative_improvement(int startMs, LiftingSettings* settings)
 		// compute reachability up to split time
 		while (safe && timeRemaining > 0)
 		{
-			// reachedAtIntermediateTime is a functiont that makes sure that the current state satisfies 
+			// reachedAtIntermediateTime is a function that makes sure that the current state satisfies 
 			// the constraints. 
 			if (settings->reachedAtIntermediateTime) {
 				hull = trackedRect;

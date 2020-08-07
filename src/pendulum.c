@@ -198,10 +198,12 @@ bool runReachability(REAL* start, REAL simTime, REAL wallTimeMs, REAL startMs)
 {
 	LiftingSettings set;
 
+	printf("Starting reachability computation from the following state:\n");
 	for (int d = 0; d < NUM_DIMS; ++d)
 	{
 		set.init.dims[d].min = start[d];
 		set.init.dims[d].max = start[d];
+		printf("[%f,%f]\n",set.init.dims[d].min,set.init.dims[d].max);
 	}
 
 	set.reachTime = simTime;
@@ -212,6 +214,8 @@ bool runReachability(REAL* start, REAL simTime, REAL wallTimeMs, REAL startMs)
 	iss = iss * 0.10f;
 
 	DEBUG_PRINT("\n\rsimTime: %f\n\rreachTime: %f\n\r\n\r", simTime, set.reachTime);
+	
+	
 
 	set.initialStepSize = iss; //set.reachTime / 10.0f;
 	set.maxRectWidthBeforeError = 100;
@@ -219,6 +223,9 @@ bool runReachability(REAL* start, REAL simTime, REAL wallTimeMs, REAL startMs)
 	set.reachedAtFinalTime = finalState;
 	set.reachedAtIntermediateTime = intermediateState;
 	set.restartedComputation = 0; //restartedComputation;
+
+	// debugging for patrick
+	printf("Beginning Reachability Analysis >>>> initialStepSize: %f, reachTime: %f\n\n",set.initialStepSize,set.reachTime);
 
 	return face_lifting_iterative_improvement(startMs, &set);
 }

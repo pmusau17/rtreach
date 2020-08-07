@@ -235,6 +235,7 @@ runReachability is a functiond defined within [pendulum.c](pendulum.c). That use
 ### Notes:
 
 - What is the input when the non-linear pendulum model is used? I don't see an input for the linear model its the feedback controller KX with K derived from solving the LMI problem.
+- When you assign a struct to another one and there aren't any fields allocated by new, you make a simple copy. This is the case when you have two HyperRectangle
 
 
 
