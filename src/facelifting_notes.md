@@ -60,5 +60,7 @@ Since the state was simulated safe after 0.100 seconds, we now run the reachabil
 
 Reminder: 
 
-- The get_derivative_bounds(&faceNebRect, f) function is an implementation of the derivatives of the model one dimension at a time. It allows for the evaluation of the derivative with respect to the faces of an orthogonal polyhedron. Depending on which face number it is. It will either give you the minimum or the maximum of the interval. So if its even it returns the min if its odd it returns the maximum. I'm not sure I exactly understand that but ok.
+- The get_derivative_bounds(&faceNebRect, f) function is an implementation of the derivatives of the model one dimension at a time. It allows for the evaluation of the derivative with respect to the faces of an orthogonal polyhedron. Depending on which face number it is. It will either give you the minimum or the maximum of the interval. So if its even it returns the min if its odd it returns the maximum. The justification for why this works like that is on page 94 of Thao Dang's Thesis.
+
+
 

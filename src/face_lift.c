@@ -10,6 +10,14 @@
 #include "face_lift.h"
 #include "util.h"
 
+
+
+// Constants necessary to guarantee loop termination.
+// These bound the values of the derivatives
+const REAL MAX_DER = 99999;
+const REAL MIN_DER = -99999;
+
+
 // make a face's neighborhood of a given width
 void make_neighborhood_rect(HyperRectangle* out, int f,
 		HyperRectangle* bloatedRect, HyperRectangle* originalRect, REAL nebWidth)
@@ -34,6 +42,10 @@ void make_neighborhood_rect(HyperRectangle* out, int f,
 	int d = f / 2;
 
 	// flatten
+	// The derivatives are evaluated along the face
+	// so what the next line does is take face value based on the dimension 
+	// and whether the face is oriented to the negative or positive direction, respectively
+	// e_i+ = x_i = ui, e_i- = l_i
 	if (isMin)
 	{
 		out->dims[d].min = originalRect->dims[d].min;
@@ -45,16 +57,18 @@ void make_neighborhood_rect(HyperRectangle* out, int f,
 		out->dims[d].max = originalRect->dims[d].max;
 	}
 
+	// depending on the value returned by the derivative 
+	// extend the dimensions by the derivative
+	// if its a negative facing face, the negative directions move it outward 
+	// and vice versa
 	// swap if nebWidth was negative
+
 	if (nebWidth < 0)
 		out->dims[d].min += nebWidth;
 	else
 		out->dims[d].max += nebWidth;
 }
 
-// necessary to guarantee loop termination
-const REAL MAX_DER = 99999;
-const REAL MIN_DER = -99999;
 
 // do a single face lifting operation
 // et (error tracker) is set if you want to track the sources of errors, can be null
@@ -71,6 +85,10 @@ REAL lift_single_rect(HyperRectangle* rect, REAL stepSize, REAL timeRemaining)
 	// estimate the widths of the neighborhoods   //
 	// construct bloated rect (for neighborhoods) //
 
+	// The reason we have this bloated rect, which is a copy of the rectangle for which we 
+	// are doing the face_lifting operations, is if we need to recompute the derivatives
+	// for the facelifting
+	
 	HyperRectangle bloatedRect = *rect;
 	REAL nebWidth[NUM_FACES];
 
@@ -81,7 +99,7 @@ REAL lift_single_rect(HyperRectangle* rect, REAL stepSize, REAL timeRemaining)
 
 	bool needRecompute = true;
 	REAL minNebCrossTime;
-	REAL ders[NUM_FACES];
+	REAL ders[NUM_FACES]; // array that stores each derivative for each face
 	
 	// Printing Patrick
 	printf("rect: ");
@@ -104,6 +122,7 @@ REAL lift_single_rect(HyperRectangle* rect, REAL stepSize, REAL timeRemaining)
 			// make candidate neighborhood
 			make_neighborhood_rect(&faceNebRect, f, &bloatedRect, rect, nebWidth[f]);
 			
+			// print Patrick
 			printf("faceNebRect: %d :",f);
 			print(&faceNebRect);
 			printf("\n");
@@ -127,7 +146,7 @@ REAL lift_single_rect(HyperRectangle* rect, REAL stepSize, REAL timeRemaining)
 			
 			// if it is a negative facing face the derivative is negative if it is less than 0.
 			// if it is a positive facing face the derivative has to be positive to grow and outward.
-			
+
 			bool grewOutward = (isMin && newNebWidth < 0) || (!isMin && newNebWidth > 0); 
 
 			// check if the previous nebWidth grewOutward.
