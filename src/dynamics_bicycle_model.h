@@ -1,6 +1,6 @@
 // Patrick Musau
 // 8-2020
-// F1Tenth Bicycle Model Header file
+// Bicycle Model Header file
 
 // if this file is included in geometry.h, the controlled bicycle model dynamics will be compiled
 

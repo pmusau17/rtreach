@@ -234,7 +234,8 @@ runReachability is a functiond defined within [pendulum.c](pendulum.c). That use
 
 ### Notes:
 
-- What is the input when the non-linear pendulum model is used? I don't see an input for the linear model its the feedback controller KX with K derived from solving the LMI problem.
+- What is the input when the non-linear pendulum model is used? I don't see an input for the linear model its the feedback controller KX with K derived from solving the LMI problem. How does this tool incorporate inputs in general. I don't see any framework for that as of yet. Currently the [face_lift.c](face_lift.c) computes derivatives simply as a function of the state. 
+   - Best answer as of now: The answer to that question is not contained in this repo. [non-linear model with input](https://github.com/trhoangdung/starl/blob/drreach/drreach/src/main/java/tran/lib/drreach/drreachDynamics/Simplified_Quadcopter.java)
 - When you assign a struct to another one and there aren't any fields allocated by new, you make a simple copy. This is the case when you have two HyperRectangle
 
 

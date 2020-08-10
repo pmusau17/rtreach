@@ -12,7 +12,7 @@ LIBS = -lm
 FLAGS_ARM = -static
 GNUPLOT = gnuplot
 RTREACH_CORE = face_lift.c geometry.c interval.c simulate.c util.c
-RTREACH_EXAMPLES = dynamics_converging_oscillator.c dynamics_harmonic_oscillator.c dynamics_vanderpol.c dynamics_pendulum.c dynamics_pendulum_nonlinear.c
+RTREACH_EXAMPLES = dynamics_converging_oscillator.c dynamics_harmonic_oscillator.c dynamics_vanderpol.c dynamics_pendulum.c dynamics_pendulum_nonlinear.c dynamics_bicycle_model.c 
 
 # using static on arm to enable double comparisons...:http://stackoverflow.com/questions/25756939/gnu-c-atof-strtof-and-strtod-fail-debian-for-beagleboard
 
@@ -32,6 +32,7 @@ x86:
 x86_nonlinear:
 	$(CC) $(FLAGS) main.c $(RTREACH_CORE) $(RTREACH_EXAMPLES) pendulum.c $(LIBS) -o rtreach -DNONLINEAR_PENDULUM
 # for nonlinear pendulum, use -DNONLINEAR_PENDULUM instead of -DLINEAR_PENDULUM
+# for the bicycle model use -BICYCLE_MODEL_NONLINEAR
 
 x86_plot_linear_pendulum:
 	$(CC) $(FLAGS) main_plots.c $(RTREACH_CORE) $(RTREACH_EXAMPLES) pendulum_plots.c $(LIBS) -o rtreach_plots.exe -DLINEAR_PENDULUM
