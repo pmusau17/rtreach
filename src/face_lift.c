@@ -19,24 +19,15 @@ const REAL MIN_DER = -99999;
 
 
 // make a face's neighborhood of a given width
+// At each dimension, there are two faces corresponding to that dimension, minimum_face and maximum_face
+// For example, Rect: 0 <= x <= 2: the minimum_face is at x = 0 (a point in this case), the maximum_face is at x = 2
+// For two dimensional Rectangle:     0 <= x1 <= 2; 1 <= x2 <= 3: at the dimension 1 (i.e., x1 axis) the minimum face
+// is a line x1 = 0, 1 <= x2 <= 3 and the maximum face is a line x1 = 2, 1 <= x2 <= 3
+
 void make_neighborhood_rect(HyperRectangle* out, int f,
 		HyperRectangle* bloatedRect, HyperRectangle* originalRect, REAL nebWidth)
 {
 	*out = *bloatedRect;
-
-	/*printf("out: ");
-	print(out);
-	printf("\n\n");
-
-	printf("bloatedRect: ");
-	print(bloatedRect);
-	printf("\n");
-
-	printf("originalRect: ");
-	print(originalRect);
-	printf("\n");*/
-
-
 
 	bool isMin = (f % 2) == 0;
 	int d = f / 2;
@@ -46,6 +37,8 @@ void make_neighborhood_rect(HyperRectangle* out, int f,
 	// so what the next line does is take face value based on the dimension 
 	// and whether the face is oriented to the negative or positive direction, respectively
 	// e_i+ = x_i = ui, e_i- = l_i
+
+	// select the negative face for this dimension
 	if (isMin)
 	{
 		out->dims[d].min = originalRect->dims[d].min;
@@ -53,6 +46,7 @@ void make_neighborhood_rect(HyperRectangle* out, int f,
 	}
 	else
 	{
+		// select the positive face for this dimension
 		out->dims[d].min = originalRect->dims[d].max;
 		out->dims[d].max = originalRect->dims[d].max;
 	}
@@ -88,7 +82,7 @@ REAL lift_single_rect(HyperRectangle* rect, REAL stepSize, REAL timeRemaining)
 	// The reason we have this bloated rect, which is a copy of the rectangle for which we 
 	// are doing the face_lifting operations, is if we need to recompute the derivatives
 	// for the facelifting
-	
+
 	HyperRectangle bloatedRect = *rect;
 	REAL nebWidth[NUM_FACES];
 

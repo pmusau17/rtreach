@@ -76,15 +76,15 @@ Definitions in this file:
 Methods declared in this header file and their explanations (**add them as you figure it out** ): 
 
 - double interval_width(Interval* i);
-   - **explanation**:
+   - **explanation**: Returns i.max - i.min
 - bool hyperrectangle_contains(HyperRectangle* outside, HyperRectangle* inside, bool printErrors);
-   - **explanation**:
+   - **explanation**: checks whether the hyperrectange inside is within outside. It does this one dimension at a time and if printErrors is true, will display which part of inside is not contained within outside.
 - void hyperrectangle_grow_to_convex_hull(HyperRectangle* grower, HyperRectangle* contained);
-   - **explanation**:
+   - **explanation**: This function takes two hyperRectangles grower and contained. It then bloats grower so that grower becomes at least as large as contained. Aight...
 - double hyperrectange_max_width(HyperRectangle* rect);
-   - **explanation**:
+   - **explanation**: returns the max interval width in any dimension for the given hyperRectangle.
 - void hyperrectangle_bloat(HyperRectangle* out, double from[NUM_DIMS], dobule width);
-   - **explanation**:
+   - **explanation**: This function extends the hyperRectangle by width for each dimension. so i.min - width and i.max + width.
 
 ### dynamics_pendulum_nonlinear.h
 
@@ -235,7 +235,7 @@ runReachability is a functiond defined within [pendulum.c](pendulum.c). That use
 ### Notes:
 
 - What is the input when the non-linear pendulum model is used? I don't see an input for the linear model its the feedback controller KX with K derived from solving the LMI problem. How does this tool incorporate inputs in general. I don't see any framework for that as of yet. Currently the [face_lift.c](face_lift.c) computes derivatives simply as a function of the state. 
-   - Best answer as of now: The answer to that question is not contained in this repo. [non-linear model with input](https://github.com/trhoangdung/starl/blob/drreach/drreach/src/main/java/tran/lib/drreach/drreachDynamics/Simplified_Quadcopter.java)
+   - Best answer as of now: The answer to that question is not contained in this repo. [Here is an example](https://github.com/trhoangdung/starl/blob/drreach/drreach/src/main/java/tran/lib/drreach/drreachDynamics/Simplified_Quadcopter.java)
 - When you assign a struct to another one and there aren't any fields allocated by new, you make a simple copy. This is the case when you have two HyperRectangle
 
 
