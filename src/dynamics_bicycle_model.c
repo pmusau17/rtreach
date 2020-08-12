@@ -1,4 +1,4 @@
-#include "geometry.h"
+#include "dynamics_bicycle.h"
 #include "util.h"
 #include "interval.h"
 
@@ -47,10 +47,8 @@
 
 
 // implement the derivative using interval arithmetic
-double get_derivative_bounds(HyperRectangle* rect, int faceIndex,REAL heading_input, REAL throttle=16.0);
+double get_derivative_bounds_bicycle(HyperRectangle* rect, int faceIndex,REAL heading_input, REAL throttle);
 {
-
-
     REAL u = throttle;
     REAL delta = heading_input;
 
