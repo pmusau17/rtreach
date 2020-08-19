@@ -132,11 +132,11 @@ REAL lift_single_rect_bicycle(HyperRectangle* rect, REAL stepSize, REAL timeRema
 
 
 			// so we cap the derivative at 999999 and min at the negative of that.
-			if (der > MAX_DER) {
-				der = MAX_DER;
+			if (der > MAX_DER_B) {
+				der = MAX_DER_B;
                         }
-			else if (der < MIN_DER) {
-				der = MIN_DER;
+			else if (der < MIN_DER_B) {
+				der = MIN_DER_B;
                         }
 
 			REAL prevNebWidth = nebWidth[f];

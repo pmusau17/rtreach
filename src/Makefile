@@ -11,8 +11,8 @@ FLAGS = -std=gnu99 -O3 -Wall
 LIBS = -lm
 FLAGS_ARM = -static
 GNUPLOT = gnuplot
-RTREACH_CORE = face_lift.c geometry.c interval.c simulate.c util.c face_lift_bicycle_model.c
-RTREACH_EXAMPLES = dynamics_converging_oscillator.c dynamics_harmonic_oscillator.c dynamics_vanderpol.c dynamics_pendulum.c dynamics_pendulum_nonlinear.c dynamics_bicycle_model.c 
+RTREACH_CORE = face_lift.c geometry.c interval.c simulate.c util.c 
+RTREACH_EXAMPLES = dynamics_converging_oscillator.c dynamics_harmonic_oscillator.c dynamics_vanderpol.c dynamics_pendulum.c dynamics_pendulum_nonlinear.c 
 
 # using static on arm to enable double comparisons...:http://stackoverflow.com/questions/25756939/gnu-c-atof-strtof-and-strtod-fail-debian-for-beagleboard
 

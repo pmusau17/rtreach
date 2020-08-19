@@ -1,0 +1,1 @@
+gcc -std=gnu99 -O3 -Wall  main.c face_lift_bicycle_model.c geometry.c interval.c simulate.c util.c  dynamics_bicycle_model.c  bicycle_main.c  -lm -o bicycle -DBICYCLE_MODEL_NONLINEAR
