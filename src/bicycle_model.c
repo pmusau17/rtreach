@@ -59,7 +59,7 @@ bool intermediateState(HyperRectangle* r)
 
 	// check hyper_rectangle enters the set x: [1,2], y: [1,2] for now
 
-
+    println(r);
 	if (r->dims[0].min > 1 && r->dims[0].max < 2) // position limits
 		allowed = false;
 	else if (r->dims[1].min > 1 || r->dims[1].max < 2) // velocity limits
