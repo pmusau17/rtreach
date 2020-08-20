@@ -8,11 +8,9 @@
 #include <stdlib.h>
 
 #include "dynamics_bicycle.h"
-#include "dynamics_bicycle_model.h"
 #include "main.h"
 #include "face_lift.h"
 #include "util.h"
-#include "geometry.h"
 
 
 
@@ -20,6 +18,7 @@
 // returns true if the reachable set of states is satisfactory according to the
 // function you provide in LiftingSettings (reachedAtIntermediateTime, reachedAtFinalTime)
 bool face_lifting_iterative_improvement_bicycle(int startMs, LiftingSettings* settings, REAL heading_input, REAL throttle);
+REAL get_derivative_bounds_bicycle(HyperRectangle* rect, int faceIndex,REAL heading_input, REAL throttle);
 
 
 
@@ -101,10 +100,10 @@ REAL lift_single_rect_bicycle(HyperRectangle* rect, REAL stepSize, REAL timeRema
 	REAL minNebCrossTime;
 	REAL ders[NUM_FACES]; // array that stores each derivative for each face
 	
-	// Printing Patrick
+	/* Printing Patrick
 	printf("rect: ");
 	print(rect);
-	printf("\n\n");
+	printf("\n\n");*/
 
 
 	while (needRecompute)
@@ -122,15 +121,15 @@ REAL lift_single_rect_bicycle(HyperRectangle* rect, REAL stepSize, REAL timeRema
 			// make candidate neighborhood
 			make_neighborhood_rect_bicycle(&faceNebRect, f, &bloatedRect, rect, nebWidth[f]);
 			
-			// print Patrick
+			/* print Patrick
 			printf("faceNebRect: %d :",f);
 			print(&faceNebRect);
-			printf("\n");
+			printf("\n");*/
 
 			// test derivative inside neighborhood
 
 			// the projection of the derivative on the outward norm e_i- is -fi(x) and fi(x) for e_i
-			REAL der = get_derivative_bounds_bicycle(&faceNebRect, f,heading_input, throttle);
+			REAL der = get_derivative_bounds_bicycle(&faceNebRect,f, heading_input, throttle);
 
 
 			// so we cap the derivative at 999999 and min at the negative of that.
@@ -285,10 +284,10 @@ bool face_lifting_iterative_improvement_bicycle(int startMs, LiftingSettings* se
 		// Get the initial set from which to perform reachability analysis.
 		HyperRectangle trackedRect = settings->init;
 
-		// Debugging for Patrick
+		/* Debugging for Patrick
 		printf("iter: %d, stepSize: %f with ",iter,stepSize);
 		print(&trackedRect);
-		printf("\n");
+		printf("\n");*/
 		
 
 		// Create a new hyperrectangle

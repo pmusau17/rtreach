@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
+#include "util.h"
 #include "main.h"
 #include "bicycle_model.h"
 
@@ -62,7 +62,7 @@ int main( int argc, const char* argv[] )
 		startState[3] = atof(argv[5]);
         control_input[0] = atof(argv[6]);
         control_input[1] = atof(argv[7]);
-		DEBUG_PRINT("runtime: %d ms\n\rx_0[0]: %f\n\rx_0[1]: %f\n\rx_0[2]: %f\n\rx_0[3]: %f\n\ru_0[0]: %f\n\ru_0[2]: %f\n\r", runtimeMs, startState[0], startState[1], startState[2], startState[3],control_input[0],control_input[1]);
+		DEBUG_PRINT("runtime: %d ms\n\rx_0[0]: %f\n\rx_0[1]: %f\n\rx_0[2]: %f\n\rx_0[3]: %f\n\ru_0[0]: %f\n\ru_0[1]: %f\n\r\n", runtimeMs, startState[0], startState[1], startState[2], startState[3],control_input[0],control_input[1]);
 	}
 #endif // linux
 
@@ -74,15 +74,26 @@ int main( int argc, const char* argv[] )
 #endif
 #endif
 
-    // simulate the car with a constant input
+    REAL delta = control_input[1];
+    REAL u = control_input[0];
+    // simulate the car with a constant input passed from the command line
+    getSimulatedSafeTime(startState,delta,u);
+    printf("\n");
 
-    getSimulatedSafeTime(startState,control_input[1],control_input[0]);
+    // simTime 
+    REAL timeToSafe = 2.0;
+
+    // startMs 
+    int startMs = milliseconds();
+    
+    // run reachability analysis test 
+    bool safe = runReachability_bicycle(startState, timeToSafe, runtimeMs, startMs,delta,u);
 	//int runtimeMs = 20; // run for 20 milliseconds
 
 	// return value: 0 = unsafe by all, 1 = safe by simulation, 2 = safe by reachability
 	//int safe = isSafe(runtimeMs, startState);
 
-	//DEBUG_PRINT("done, result = %s\n", safe ? "safe" : "unsafe");
+	DEBUG_PRINT("done, result = %s\n", safe ? "safe" : "unsafe");
 
 	// http://www.mathworks.com/help/matlab/apiref/mexprintf.html
 #ifdef DEBUG

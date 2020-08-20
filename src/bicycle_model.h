@@ -11,7 +11,7 @@
 
 
 // run reachability for a given wall timer (or iterations if negative)
-bool runReachability(REAL* start, REAL simTime, REAL wallTimeMs, REAL startMs);
+bool runReachability_bicycle(REAL* start, REAL simTime, REAL wallTimeMs, REAL startMs,REAL heading, REAL throttle);
 REAL getSimulatedSafeTime(REAL start[4],REAL heading_input, REAL throttle);
 
 #endif

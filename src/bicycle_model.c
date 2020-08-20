@@ -35,7 +35,7 @@ bool finalState(HyperRectangle* rect)
 
 	DEBUG_PRINT("--->  potential of final state = %f\n", maxPotential);
 
-	return maxPotential < 1;
+	return maxPotential > 1;
 }
 
 // Simulation 
@@ -55,15 +55,14 @@ REAL getSimulatedSafeTime(REAL start[4],REAL heading_input,REAL throttle)
 bool intermediateState(HyperRectangle* r)
 {
 	bool allowed = true;
-	const REAL FIFTEEN_DEGREES_IN_RADIANS = 0.2618;
+	//const REAL FIFTEEN_DEGREES_IN_RADIANS = 0.2618;
 
-	// check if the constraints are satisfied
+	// check hyper_rectangle enters the set x: [1,2], y: [1,2] for now
 
-	if (r->dims[0].min < -1 || r->dims[0].max > 1) // position limits
+
+	if (r->dims[0].min > 1 && r->dims[0].max < 2) // position limits
 		allowed = false;
-	else if (r->dims[1].min < -1 || r->dims[1].max > 1) // velocity limits
-		allowed = false;
-	else if (r->dims[2].min < -FIFTEEN_DEGREES_IN_RADIANS || r->dims[2].max > FIFTEEN_DEGREES_IN_RADIANS)
+	else if (r->dims[1].min > 1 || r->dims[1].max < 2) // velocity limits
 		allowed = false;
 
 	return allowed;
@@ -75,7 +74,6 @@ bool intermediateState(HyperRectangle* r)
 bool runReachability_bicycle(REAL* start, REAL simTime, REAL wallTimeMs, REAL startMs,REAL heading_input, REAL throttle)
 {
 	LiftingSettings set;
-
 	printf("Starting reachability computation from the following state:\n");
 	for (int d = 0; d < NUM_DIMS; ++d)
 	{

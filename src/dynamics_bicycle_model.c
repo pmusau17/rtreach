@@ -51,9 +51,6 @@ double get_derivative_bounds_bicycle(HyperRectangle* rect, int faceIndex,REAL he
 {
     REAL u = throttle;
     REAL delta = heading_input;
-
-    printf("u: %f, delta: %f\n",u, delta);
-
     REAL ca = 1.633;
     REAL cm = 0.2;
     REAL ch = 4;
