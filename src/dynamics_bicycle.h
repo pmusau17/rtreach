@@ -8,6 +8,4 @@
 #define DYNAMICS_BICYCLE_MODEL
 #define NUM_DIMS (4)
 
-
-
 #endif

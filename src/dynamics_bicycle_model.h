@@ -8,9 +8,9 @@
 #define DYNAMICS_BICYCLE_MODEL_H_
 
 
-#define DYNAMICS_BICYCLE_MODEL
+#include <stdbool.h>
+#include "geometry.h"
 
-#define NUM_DIMS (4)
-
+double get_derivative_bounds_bicycle(HyperRectangle* rect, int faceIndex,REAL heading_input, REAL throttle);
 
 #endif

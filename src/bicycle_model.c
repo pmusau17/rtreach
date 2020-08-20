@@ -6,18 +6,6 @@
 #include <stdio.h>
 
 
-// Simulation 
-REAL getSimulatedSafeTime(REAL start[4])
-{
-	REAL stepSize = 0.02f;
-	REAL rv = 0.0f;
-
-	simulate(start, stepSize, shouldStop, (void*)&rv); // TODO: look here
-
-	//DEBUG_PRINT("time until simulation reaches safe state = %f\n", rv);
-
-	return rv;
-}
 
 
 // function that stops simulation 
@@ -26,44 +14,6 @@ bool shouldStop(REAL state[NUM_DIMS], REAL simTime, void* p)
 	bool rv = false;
     return rv;
 }
-
-
-bool runReachability(REAL* start, REAL simTime, REAL wallTimeMs, REAL startMs)
-{
-	LiftingSettings set;
-
-	printf("Starting reachability computation from the following state:\n");
-	for (int d = 0; d < NUM_DIMS; ++d)
-	{
-		set.init.dims[d].min = start[d];
-		set.init.dims[d].max = start[d];
-		printf("[%f,%f]\n",set.init.dims[d].min,set.init.dims[d].max);
-	}
-
-	set.reachTime = simTime;
-	set.maxRuntimeMilliseconds = wallTimeMs;
-
-	REAL iss = set.reachTime;
-//	iss = iss / 10.0f; // problem with division?
-	iss = iss * 0.10f;
-
-	DEBUG_PRINT("\n\rsimTime: %f\n\rreachTime: %f\n\r\n\r", simTime, set.reachTime);
-	
-	
-
-	set.initialStepSize = iss; //set.reachTime / 10.0f;
-	set.maxRectWidthBeforeError = 100;
-
-	set.reachedAtFinalTime = finalState;
-	set.reachedAtIntermediateTime = intermediateState;
-	set.restartedComputation = 0; //restartedComputation;
-
-	// debugging for patrick
-	printf("Beginning Reachability Analysis >>>> initialStepSize: %f, reachTime: %f\n\n",set.initialStepSize,set.reachTime);
-
-	return face_lifting_iterative_improvement_bicycle(startMs, &set);
-}
-
 
 // This function enumerates all of the corners of the current HyperRectangle and 
 // returns whether or not any of the points lies outside of the ellipsoid
@@ -107,6 +57,19 @@ bool finalState(HyperRectangle* rect)
 	return maxPotential < 1;
 }
 
+// Simulation 
+REAL getSimulatedSafeTime(REAL start[4])
+{
+	REAL stepSize = 0.02f;
+	REAL rv = 0.0f;
+
+	simulate(start, stepSize, shouldStop, (void*)&rv); // TODO: look here
+
+	//DEBUG_PRINT("time until simulation reaches safe state = %f\n", rv);
+
+	return rv;
+}
+
 // called on states reached during the computation
 bool intermediateState(HyperRectangle* r)
 {
@@ -124,3 +87,46 @@ bool intermediateState(HyperRectangle* r)
 
 	return allowed;
 }
+
+
+
+
+bool runReachability(REAL* start, REAL simTime, REAL wallTimeMs, REAL startMs)
+{
+	LiftingSettings set;
+
+	printf("Starting reachability computation from the following state:\n");
+	for (int d = 0; d < NUM_DIMS; ++d)
+	{
+		set.init.dims[d].min = start[d];
+		set.init.dims[d].max = start[d];
+		printf("[%f,%f]\n",set.init.dims[d].min,set.init.dims[d].max);
+	}
+
+	set.reachTime = simTime;
+	set.maxRuntimeMilliseconds = wallTimeMs;
+
+	REAL iss = set.reachTime;
+//	iss = iss / 10.0f; // problem with division?
+	iss = iss * 0.10f;
+
+	DEBUG_PRINT("\n\rsimTime: %f\n\rreachTime: %f\n\r\n\r", simTime, set.reachTime);
+	
+	
+
+	set.initialStepSize = iss; //set.reachTime / 10.0f;
+	set.maxRectWidthBeforeError = 100;
+
+	set.reachedAtFinalTime = finalState;
+	set.reachedAtIntermediateTime = intermediateState;
+	set.restartedComputation = 0; //restartedComputation;
+
+	// debugging for patrick
+	printf("Beginning Reachability Analysis >>>> initialStepSize: %f, reachTime: %f\n\n",set.initialStepSize,set.reachTime);
+
+	return face_lifting_iterative_improvement_bicycle(startMs, &set);
+}
+
+
+
+

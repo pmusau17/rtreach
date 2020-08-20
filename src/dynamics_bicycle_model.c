@@ -1,4 +1,5 @@
 #include "dynamics_bicycle.h"
+#include "dynamics_bicycle_model.h"
 #include "util.h"
 #include "interval.h"
 
@@ -44,7 +45,6 @@
 // u = 16 constant speed (2.4 m/s)
 
 // state vector x,y,v,theta
-
 
 // implement the derivative using interval arithmetic
 double get_derivative_bounds_bicycle(HyperRectangle* rect, int faceIndex,REAL heading_input, REAL throttle)

@@ -8,9 +8,11 @@
 #include <stdlib.h>
 
 #include "dynamics_bicycle.h"
+#include "dynamics_bicycle_model.h"
 #include "main.h"
 #include "face_lift.h"
 #include "util.h"
+#include "geometry.h"
 
 
 
@@ -128,7 +130,7 @@ REAL lift_single_rect_bicycle(HyperRectangle* rect, REAL stepSize, REAL timeRema
 			// test derivative inside neighborhood
 
 			// the projection of the derivative on the outward norm e_i- is -fi(x) and fi(x) for e_i
-			REAL der = get_derivative_bounds_bicycle(HyperRectangle* rect, int faceIndex,REAL heading_input, REAL throttle);
+			REAL der = get_derivative_bounds_bicycle(&faceNebRect, f,heading_input, throttle);
 
 
 			// so we cap the derivative at 999999 and min at the negative of that.
@@ -302,7 +304,7 @@ bool face_lifting_iterative_improvement_bicycle(int startMs, LiftingSettings* se
                         }
 
 			// debug changed so error tracker is always passed in (see note)
-			REAL timeElapsed = lift_single_rect_bicycle(HyperRectangle* rect, REAL stepSize, REAL timeRemaining, REAL heading_input, REAL throttle);
+			REAL timeElapsed = lift_single_rect_bicycle(&trackedRect, stepSize, timeRemaining, heading_input, throttle);
 
 			// if we're not even close to the desired step size
 			if (hyperrectange_max_width(&trackedRect) > settings->maxRectWidthBeforeError)
