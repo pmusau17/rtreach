@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#ifdef BICYCLE_MODEL_NONLINEAR
+#ifdef DYNAMICS_BICYCLE_MODEL
 
 // a bicycle model to model the car's dynamics. The bicycle model is a standard model for cars with front steering. 
 // This model tracks well for slow speeds
@@ -47,16 +47,16 @@
 
 
 // implement the derivative using interval arithmetic
-double get_derivative_bounds_bicycle(HyperRectangle* rect, int faceIndex,REAL heading_input, REAL throttle);
+double get_derivative_bounds_bicycle(HyperRectangle* rect, int faceIndex,REAL heading_input, REAL throttle)
 {
     REAL u = throttle;
     REAL delta = heading_input;
 
-    ca = 1.633;
-    cm = 0.2;
-    ch = 4;
-    lf = 0.225;
-    lr = 0.225;
+    REAL ca = 1.633;
+    REAL cm = 0.2;
+    REAL ch = 4;
+    REAL lf = 0.225;
+    REAL lr = 0.225;
 
     int dim = faceIndex / 2;
 	bool isMin = (faceIndex % 2) == 0;
@@ -83,18 +83,18 @@ double get_derivative_bounds_bicycle(HyperRectangle* rect, int faceIndex,REAL he
     {
         // v' = -ca * v + ca*cm*(u - ch)
 
-        Interval A = mul_interval(v, new_interval(-ca));
-        Interval B = mul_interval(new_interval(ca),new_interval(cm));
-        Interval C = sub_interval(new_interval(u),new_interval(ch));
+        Interval A = mul_interval(v, new_interval_v(-ca));
+        Interval B = mul_interval(new_interval_v(ca),new_interval_v(cm));
+        Interval C = sub_interval(new_interval_v(u),new_interval_v(ch));
         Interval D = mul_interval(B,C);
         rv = add_interval(A,D);
     }
     else if (dim ==3)
     {
         // theta' = v * (cos(beta)/(lf+lr)) * tan(delta)
-        Interval mult = new_interval(1.0 /(lf +lr));
+        Interval mult = new_interval_v(1.0 /(lf +lr));
         Interval A = mul_interval(v,mult);
-        Interval delt = new_interval(delta);
+        Interval delt = new_interval_v(delta);
         Interval tan = div_interval(sin_interval(delt),cos_interval(delt));
         rv = mul_interval(A,tan);
 

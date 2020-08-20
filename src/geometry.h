@@ -12,7 +12,7 @@
 //#include "dynamics_harmonic_oscillator.h"
 //#include "dynamics_vanderpol.h"
 #ifdef BICYCLE_MODEL_NONLINEAR
-#include "dynamics_bicycle_model.h"
+#include "dynamics_bicycle.h"
 #else
 
 #ifdef LINEAR_PENDULUM
