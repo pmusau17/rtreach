@@ -1,4 +1,4 @@
-// example call: ./rtreach 100 0.0 0.0 0.0 0.0 16.0 0.2666
+// example call: ./bicycle 100 0.0 0.0 0.0 0.0 16.0 0.2666
 // example call output:
 // started!
 // Argc: 6
