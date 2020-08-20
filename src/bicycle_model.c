@@ -2,11 +2,13 @@
 #include "main.h"
 #include "face_lift.h"
 #include "util.h"
-#include "simulate.h"
+#include "simulate_bicycle.h"
 #include <stdio.h>
 
 
 
+// declaration 
+bool face_lifting_iterative_improvement_bicycle(int startMs, LiftingSettings* settings, REAL heading_input, REAL throttle);
 
 // function that stops simulation 
 bool shouldStop(REAL state[NUM_DIMS], REAL simTime, void* p)
@@ -19,38 +21,7 @@ bool shouldStop(REAL state[NUM_DIMS], REAL simTime, void* p)
 // returns whether or not any of the points lies outside of the ellipsoid
 bool finalState(HyperRectangle* rect)
 {
-	REAL points[16][4] =
-	{
-		{rect->dims[0].min, rect->dims[1].min, rect->dims[2].min, rect->dims[3].min},
-		{rect->dims[0].min, rect->dims[1].min, rect->dims[2].min, rect->dims[3].max},
-		{rect->dims[0].min, rect->dims[1].min, rect->dims[2].max, rect->dims[3].min},
-		{rect->dims[0].min, rect->dims[1].min, rect->dims[2].max, rect->dims[3].max},
-
-		{rect->dims[0].min, rect->dims[1].max, rect->dims[2].min, rect->dims[3].min},
-		{rect->dims[0].min, rect->dims[1].max, rect->dims[2].min, rect->dims[3].max},
-		{rect->dims[0].min, rect->dims[1].max, rect->dims[2].max, rect->dims[3].min},
-		{rect->dims[0].min, rect->dims[1].max, rect->dims[2].max, rect->dims[3].max},
-
-		{rect->dims[0].max, rect->dims[1].min, rect->dims[2].min, rect->dims[3].min},
-		{rect->dims[0].max, rect->dims[1].min, rect->dims[2].min, rect->dims[3].max},
-		{rect->dims[0].max, rect->dims[1].min, rect->dims[2].max, rect->dims[3].min},
-		{rect->dims[0].max, rect->dims[1].min, rect->dims[2].max, rect->dims[3].max},
-
-		{rect->dims[0].max, rect->dims[1].max, rect->dims[2].min, rect->dims[3].min},
-		{rect->dims[0].max, rect->dims[1].max, rect->dims[2].min, rect->dims[3].max},
-		{rect->dims[0].max, rect->dims[1].max, rect->dims[2].max, rect->dims[3].min},
-		{rect->dims[0].max, rect->dims[1].max, rect->dims[2].max, rect->dims[3].max},
-	};
-
-	REAL maxPotential = potential(points[0][0], points[0][1], points[0][2], points[0][3]);
-
-	for (int i = 1; i < 16; ++i)
-	{
-		REAL p = potential(points[i][0], points[i][1], points[i][2], points[i][3]);
-
-		if (p > maxPotential)
-			maxPotential = p;
-	}
+	REAL maxPotential = 0.0;
 
 	DEBUG_PRINT("--->  potential of final state = %f\n", maxPotential);
 
@@ -58,12 +29,12 @@ bool finalState(HyperRectangle* rect)
 }
 
 // Simulation 
-REAL getSimulatedSafeTime(REAL start[4])
+REAL getSimulatedSafeTime(REAL start[4],REAL heading_input,REAL throttle)
 {
 	REAL stepSize = 0.02f;
 	REAL rv = 0.0f;
 
-	simulate(start, stepSize, shouldStop, (void*)&rv); // TODO: look here
+	simulate_bicycle(start, heading_input,throttle,stepSize, shouldStop, (void*)&rv); // TODO: look here
 
 	//DEBUG_PRINT("time until simulation reaches safe state = %f\n", rv);
 
@@ -91,7 +62,7 @@ bool intermediateState(HyperRectangle* r)
 
 
 
-bool runReachability(REAL* start, REAL simTime, REAL wallTimeMs, REAL startMs)
+bool runReachability_bicycle(REAL* start, REAL simTime, REAL wallTimeMs, REAL startMs,REAL heading_input, REAL throttle)
 {
 	LiftingSettings set;
 
@@ -124,7 +95,7 @@ bool runReachability(REAL* start, REAL simTime, REAL wallTimeMs, REAL startMs)
 	// debugging for patrick
 	printf("Beginning Reachability Analysis >>>> initialStepSize: %f, reachTime: %f\n\n",set.initialStepSize,set.reachTime);
 
-	return face_lifting_iterative_improvement_bicycle(startMs, &set);
+	return face_lifting_iterative_improvement_bicycle(startMs, &set,heading_input, throttle);
 }
 
 

@@ -1,6 +1,4 @@
-// example call: ./rtreach 100 -0.1 0.0 0.0 1.1
-// example matlab call: rtreach(100, -0.1, 0.0, 0.0, 1.1)
-//
+// example call: ./rtreach 100 0.0 0.0 0.0 0.0 16.0 0.2666
 // example call output:
 // started!
 // Argc: 6
@@ -48,6 +46,7 @@ int main( int argc, const char* argv[] )
 
 	int runtimeMs = 0;
 	REAL startState[4] = {0.0, 0.0, 0.0, 0.0};
+    REAL control_input[2] = {0.0,0.0};
 
 	DEBUG_PRINT("Argc: %d\n\r", argc);
 
@@ -61,7 +60,9 @@ int main( int argc, const char* argv[] )
 		startState[1] = atof(argv[3]);
 		startState[2] = atof(argv[4]);
 		startState[3] = atof(argv[5]);
-		DEBUG_PRINT("runtime: %d ms\n\rx_0[0]: %f\n\rx_0[1]: %f\n\rx_0[2]: %f\n\rx_0[3]: %f\n\r", runtimeMs, startState[0], startState[1], startState[2], startState[3]);
+        control_input[0] = atof(argv[5]);
+        control_input[1] = atof(argv[5]);
+		DEBUG_PRINT("runtime: %d ms\n\rx_0[0]: %f\n\rx_0[1]: %f\n\rx_0[2]: %f\n\rx_0[3]: %f\n\ru_0[0]: %f\n\r u_0[2]: %f\n\r", runtimeMs, startState[0], startState[1], startState[2], startState[3],control_input[0],control_input[1]);
 	}
 #endif // linux
 
@@ -85,7 +86,7 @@ int main( int argc, const char* argv[] )
 	// DEBUG_PRINT("potential of start state = %f\n",
 		// potential(startState[0], startState[1], startState[2], startState[3]));
 
-    getSimulatedSafeTime(startState);
+    getSimulatedSafeTime(startState,control_input[1],control_input[0]);
 	//int runtimeMs = 20; // run for 20 milliseconds
 
 	// return value: 0 = unsafe by all, 1 = safe by simulation, 2 = safe by reachability
