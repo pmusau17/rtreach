@@ -25,7 +25,9 @@ void simulate_bicycle(REAL startPoint[NUM_DIMS], REAL heading_input, REAL thrott
 
 	while (true)
 	{	
-		// my assumption here is that if the point is within the ellipsoid then we don't have to do any simulation
+		
+        printf("[%f,%f,%f,%f] \n",point[0],point[1],point[2],point[3]);
+        // my assumption here is that if the point is within the ellipsoid then we don't have to do any simulation
 		if (shouldStop(point, time, param)) {
 			DEBUG_PRINT("Quitting simulation: time: %f, stepSize: %f\n\r", time, stepSize);
 			break;

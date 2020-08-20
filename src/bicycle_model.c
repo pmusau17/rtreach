@@ -10,11 +10,21 @@
 // declaration 
 bool face_lifting_iterative_improvement_bicycle(int startMs, LiftingSettings* settings, REAL heading_input, REAL throttle);
 
-// function that stops simulation 
+// function that stops simulation after two seconds
 bool shouldStop(REAL state[NUM_DIMS], REAL simTime, void* p)
 {
 	bool rv = false;
-    return rv;
+    REAL maxTime = 2.0f;
+    // stop if the maximum simulation time 
+	if (simTime >= maxTime)
+	{
+		rv = true;
+
+		REAL* stopTime = (REAL*)p;
+		*stopTime = -1;
+	}
+
+	return rv;
 }
 
 // This function enumerates all of the corners of the current HyperRectangle and 

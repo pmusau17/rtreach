@@ -1,4 +1,4 @@
-// example call: ./bicycle 100 0.0 0.0 0.0 0.0 16.0 0.2666
+// example call: ./bicycle 100 0.0 0.0 0.0 0.0 16.0 0.26666
 // example call output:
 // started!
 // Argc: 6
@@ -60,14 +60,12 @@ int main( int argc, const char* argv[] )
 		startState[1] = atof(argv[3]);
 		startState[2] = atof(argv[4]);
 		startState[3] = atof(argv[5]);
-        control_input[0] = atof(argv[5]);
-        control_input[1] = atof(argv[5]);
-		DEBUG_PRINT("runtime: %d ms\n\rx_0[0]: %f\n\rx_0[1]: %f\n\rx_0[2]: %f\n\rx_0[3]: %f\n\ru_0[0]: %f\n\r u_0[2]: %f\n\r", runtimeMs, startState[0], startState[1], startState[2], startState[3],control_input[0],control_input[1]);
+        control_input[0] = atof(argv[6]);
+        control_input[1] = atof(argv[7]);
+		DEBUG_PRINT("runtime: %d ms\n\rx_0[0]: %f\n\rx_0[1]: %f\n\rx_0[2]: %f\n\rx_0[3]: %f\n\ru_0[0]: %f\n\ru_0[2]: %f\n\r", runtimeMs, startState[0], startState[1], startState[2], startState[3],control_input[0],control_input[1]);
 	}
 #endif // linux
 
-	// setttings for pendulum
-	//REAL startState[4] = {-0.1, 0.9, 0, 0};
 
 #ifdef DEBUG
 #ifdef MATLAB
@@ -76,15 +74,7 @@ int main( int argc, const char* argv[] )
 #endif
 #endif
 
-	// state = {pos, vel, angle, angular_vel}
-	// from startState = {-0.1, vel, 0, 0};
-	// set velocity to 0.6 for a recoverable state inside the ellipse
-	// set velocity to 0.7 for a recoverable state slightly outside of the ellipse
-	// set velocity to 0.8 for a recoverable state outside of the ellipse
-	// set velocity to 0.9 for an unrecoverable state
-
-	// DEBUG_PRINT("potential of start state = %f\n",
-		// potential(startState[0], startState[1], startState[2], startState[3]));
+    // simulate the car with a constant input
 
     getSimulatedSafeTime(startState,control_input[1],control_input[0]);
 	//int runtimeMs = 20; // run for 20 milliseconds
