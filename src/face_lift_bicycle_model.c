@@ -100,12 +100,7 @@ REAL lift_single_rect_bicycle(HyperRectangle* rect, REAL stepSize, REAL timeRema
 	REAL minNebCrossTime;
 	REAL ders[NUM_FACES]; // array that stores each derivative for each face
 	
-	/* Printing Patrick
-	printf("rect: ");
-	print(rect);
-	printf("\n\n");*/
-
-
+	
 	while (needRecompute)
 	{
 		needRecompute = false;
@@ -121,17 +116,12 @@ REAL lift_single_rect_bicycle(HyperRectangle* rect, REAL stepSize, REAL timeRema
 			// make candidate neighborhood
 			make_neighborhood_rect_bicycle(&faceNebRect, f, &bloatedRect, rect, nebWidth[f]);
 			
-			/* print Patrick
-			printf("faceNebRect: %d :",f);
-			print(&faceNebRect);
-			printf("\n");*/
-
 			// test derivative inside neighborhood
 
 			// the projection of the derivative on the outward norm e_i- is -fi(x) and fi(x) for e_i
 			REAL der = get_derivative_bounds_bicycle(&faceNebRect,f, heading_input, throttle);
 
-
+	
 			// so we cap the derivative at 999999 and min at the negative of that.
 			if (der > MAX_DER_B) {
 				der = MAX_DER_B;
@@ -141,7 +131,12 @@ REAL lift_single_rect_bicycle(HyperRectangle* rect, REAL stepSize, REAL timeRema
                         }
 
 			REAL prevNebWidth = nebWidth[f];
+			
 			REAL newNebWidth = der * stepSize; // the projection of the derivative is tempered by the stepSize
+
+			
+			
+			// Print Patrick printf("face: %d, isMin: %d, prevNebWidth: %f, newNebWidth:%f\n",f,isMin,prevNebWidth,newNebWidth);
 			
 			// if it is a negative facing face the derivative is negative if it is less than 0.
 			// if it is a positive facing face the derivative has to be positive to grow and outward.
@@ -178,6 +173,8 @@ REAL lift_single_rect_bicycle(HyperRectangle* rect, REAL stepSize, REAL timeRema
 					bloatedRect.dims[dim].min = rect->dims[dim].min + nebWidth[f];
 				else if (!isMin && nebWidth[f] > 0)
 					bloatedRect.dims[dim].max = rect->dims[dim].max + nebWidth[f];
+
+				
 			}
 			else
 			{
@@ -203,9 +200,13 @@ REAL lift_single_rect_bicycle(HyperRectangle* rect, REAL stepSize, REAL timeRema
 
 				ders[f] = der;
 			}
+
 		}
 	}
 
+
+	// just as a note the minTime to cross is the prevNebwidth / der
+	// the nebWidth btw is stepSize * der
 	if (minNebCrossTime * 2 < stepSize)
 	{
 		//printf(": minNebCrossTime = %f, stepSize = %f\n", minNebCrossTime, stepSize);
@@ -220,6 +221,7 @@ REAL lift_single_rect_bicycle(HyperRectangle* rect, REAL stepSize, REAL timeRema
 	// lift each face by the minimum time //
 
 	REAL timeToElapse = minNebCrossTime;
+
 
 	// subtract a tiny amount time due to multiplication / division rounding
 	timeToElapse = timeToElapse * 99999 / 100000;
@@ -273,9 +275,10 @@ bool face_lifting_iterative_improvement_bicycle(int startMs, LiftingSettings* se
 			break;
 		}
 
-		if (settings->restartedComputation) {
+		if (settings->restartedComputation)
+		{
 			settings->restartedComputation();
-                }
+        }
 
 		// This function gets the reachtime passed from the settings 
 		// In the case of the pendulum example it is 1.25*TimeToSafe
@@ -283,12 +286,6 @@ bool face_lifting_iterative_improvement_bicycle(int startMs, LiftingSettings* se
 
 		// Get the initial set from which to perform reachability analysis.
 		HyperRectangle trackedRect = settings->init;
-
-		/* Debugging for Patrick
-		printf("iter: %d, stepSize: %f with ",iter,stepSize);
-		print(&trackedRect);
-		printf("\n");*/
-		
 
 		// Create a new hyperrectangle
 		HyperRectangle hull;
@@ -298,10 +295,12 @@ bool face_lifting_iterative_improvement_bicycle(int startMs, LiftingSettings* se
 		{
 			// reachedAtIntermediateTime is a function that makes sure that the current state satisfies 
 			// the constraints. 
-			if (settings->reachedAtIntermediateTime) {
+			if (settings->reachedAtIntermediateTime) 
+			{
 				hull = trackedRect;
-                        }
-
+            }
+			
+			println(&trackedRect);
 			// debug changed so error tracker is always passed in (see note)
 			REAL timeElapsed = lift_single_rect_bicycle(&trackedRect, stepSize, timeRemaining, heading_input, throttle);
 
@@ -327,7 +326,7 @@ bool face_lifting_iterative_improvement_bicycle(int startMs, LiftingSettings* se
 				safe = safe && settings->reachedAtFinalTime(&trackedRect);
 
 			timeRemaining -= timeElapsed;
-		}
+		} // This is the end of this first while loop 
 
 		int now = milliseconds();
 		int elapsedTotal = now - startMs;

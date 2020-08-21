@@ -59,12 +59,21 @@ bool intermediateState(HyperRectangle* r)
 
 	// check hyper_rectangle enters the set x: [1,2], y: [1,2] for now
 
-    println(r);
-	if (r->dims[0].min > 1 && r->dims[0].max < 2) // position limits
+    // println(r);
+	if (r->dims[0].min > 1.0 && r->dims[0].max < 2.0) 
+	{
 		allowed = false;
-	else if (r->dims[1].min > 1 || r->dims[1].max < 2) // velocity limits
+	}
+	else if (r->dims[1].min > 1.0 && r->dims[1].max < 2.0)
+	{
 		allowed = false;
+	}
+		
 
+	if(!allowed)
+		printf("unsafe..../n");
+	// println(r);
+	// printf("%d, min: %f, min %f\n",allowed,r->dims[0].min,r->dims[0].max);
 	return allowed;
 }
 

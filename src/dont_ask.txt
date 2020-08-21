@@ -1,1 +1,21 @@
-gcc -std=gnu99 -O3 -Wall  main.c face_lift_bicycle_model.c geometry.c interval.c simulate.c util.c  dynamics_bicycle_model.c  bicycle_main.c  -lm -o bicycle -DBICYCLE_MODEL_NONLINEAR
+gcc -std=gnu99 -O3 -Wall  face_lift_bicycle_model.c geometry.c interval.c simulate.c util.c  dynamics_bicycle_model.c  bicycle_main.c  -lm -o bicycle -DBICYCLE_MODEL_NONLINEAR
+
+
+gcc -std=gnu99 -O3 -Wall  geometry.c interval.c simulate.c util.c  dynamics_bicycle_model.c  -lm -o test -DBICYCLE_MODEL_NONLINEAR
+
+
+#include <stdbool.h>
+
+#include "geometry.h"
+#include "interval.h"
+
+/**
+ * Get the bounds on the derivative in a region of space at a range of times
+ */
+double get_derivative_bounds_bicycle(HyperRectangle* rect, int faceIndex,REAL heading_input, REAL throttle);
+
+
+
+gcc -std=gnu99 -O3 -Wall  face_lift_bicycle_model.c geometry.c interval.c simulate.c util.c  dynamics_bicycle_model.c  bicycle_main.c bicycle_model.c  -lm -o bicycle -DBICYCLE_MODEL_NONLINEAR
+
+gcc -std=gnu99 -O3 -Wall  face_lift_bicycle_model.c geometry.c interval.c simulate_bicycle.c util.c  dynamics_bicycle_model.c  bicycle_main.c bicycle_model.c  -lm -o bicycle -DBICYCLE_MODEL_NONLINEAR
