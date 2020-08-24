@@ -1,1 +1,1 @@
-set obj rect from -0.237786, -0.230945 to -0.236509, -0.223653 fc rgbcolor 'red' fs solid 0.3 noborder
+set obj rect from 0.263641, -0.206558 to 0.336086, 0.372870 fc rgbcolor 'red' fs solid 0.3 noborder

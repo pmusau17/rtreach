@@ -95,11 +95,6 @@ REAL lift_single_rect(HyperRectangle* rect, REAL stepSize, REAL timeRemaining)
 	REAL minNebCrossTime;
 	REAL ders[NUM_FACES]; // array that stores each derivative for each face
 	
-	// Printing Patrick
-	printf("rect: ");
-	print(rect);
-	printf("\n\n");
-
 
 	while (needRecompute)
 	{
@@ -116,11 +111,6 @@ REAL lift_single_rect(HyperRectangle* rect, REAL stepSize, REAL timeRemaining)
 			// make candidate neighborhood
 			make_neighborhood_rect(&faceNebRect, f, &bloatedRect, rect, nebWidth[f]);
 			
-			// print Patrick
-			printf("faceNebRect: %d :",f);
-			print(&faceNebRect);
-			printf("\n");
-
 			// test derivative inside neighborhood
 
 			// the projection of the derivative on the outward norm e_i- is -fi(x) and fi(x) for e_i
