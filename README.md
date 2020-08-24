@@ -17,7 +17,7 @@ gcc -std=gnu99 -O3 -Wall  face_lift_bicycle_model.c geometry.c interval.c simula
 compile the code: 
 
 ```
-gcc -std=gnu99 -O3 -Wall  face_lift_bicycle_model.c geometry.c interval.c simulate_bicycle.c util.c  dynamics_bicycle_model.c  bicycle_plots_main.c bicycle_model_plots.c -lm -o bicycle_plot -DBICYCLE_MODEL_NONLINEAR
+gcc -std=gnu99 -O3 -Wall  face_lift_bicycle_model.c geometry.c interval.c simulate_bicycle_plots.c util.c  dynamics_bicycle_model.c  bicycle_plots_main.c bicycle_model_plots.c -lm -o bicycle_plot -DBICYCLE_MODEL_NONLINEAR
 
 ```
 

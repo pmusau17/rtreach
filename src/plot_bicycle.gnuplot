@@ -13,7 +13,10 @@ load "bicycle_initial.gnuplot.txt"
 load "bicycle_intermediate.gnuplot.txt"
 load "bicycle_final.gnuplot.txt"
 
+plot "bicycle_simulation.dat" using 1:2 with point
 plot \
    1/0 lw 4 lc rgb 'blue' with lines t 'Initial', \
    1/0 lw 4 lc rgb 'dark-green' with lines t 'Intermediate', \
    1/0 lw 4 lc rgb 'red' with lines t 'Final'
+
+

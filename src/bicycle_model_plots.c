@@ -2,7 +2,7 @@
 #include "main.h"
 #include "face_lift.h"
 #include "util.h"
-#include "simulate_bicycle.h"
+#include "simulate_bicycle_plots.h"
 #include <stdio.h>
 
 static FILE* f_initial;
@@ -47,10 +47,10 @@ bool finalState(HyperRectangle* rect)
 // Simulation 
 REAL getSimulatedSafeTime(REAL start[4],REAL heading_input,REAL throttle)
 {
-	REAL stepSize = 0.02f;
+	REAL stepSize = 0.002f;
 	REAL rv = 0.0f;
 
-	simulate_bicycle(start, heading_input,throttle,stepSize, shouldStop, (void*)&rv); // TODO: look here
+	simulate_bicycle_plots(start, heading_input,throttle,stepSize, shouldStop, (void*)&rv); // TODO: look here
 
 	//DEBUG_PRINT("time until simulation reaches safe state = %f\n", rv);
 
